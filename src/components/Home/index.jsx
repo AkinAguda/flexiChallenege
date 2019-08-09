@@ -38,7 +38,9 @@ class Home extends Component {
   submit(e) {
     e.preventDefault();
     // eslint-disable-next-line no-unused-expressions
-    <Redirect from="/" to={`/search/${this.state.queryValue}`} />;
+    this.setState({
+      toQuery: true,
+    });
   }
 
   handleSubmit() {
@@ -83,9 +85,19 @@ class Home extends Component {
         params: { query },
       },
     } = this.props;
-    const { queryValue, isLoaded, data, isModalOpen, modalProps } = this.state;
+    const {
+      queryValue,
+      isLoaded,
+      data,
+      isModalOpen,
+      modalProps,
+      toQuery,
+    } = this.state;
     return (
       <>
+        {toQuery && (
+          <Redirect from="/" to={`/search/${this.state.queryValue}`} />
+        )}
         <div className={Styles.button} onClick={this.toggeleNav} />
         <Navigation />
         <Drawer open={this.state.toggeleNav} />
@@ -99,8 +111,8 @@ class Home extends Component {
               value={queryValue}
               onChange={this.handleChange.bind(this)}
             />
-            {/* <imput type="submit" onClick={() => this.submit} /> */}
-            <button onClick={this.submit.bind(this)}>sub</button>
+            <button type="submit" onClick={this.submit.bind(this)} />
+            {/* <button onClick={this.submit.bind(this)}>sub</button> */}
           </form>
         </div>
         {isSearch ? (
