@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Styles from './index.module.css';
 import Navigation from '../Navigation';
 import Footer from '../Footer';
+import Modal from '../Modal';
+import Drawer from '../Drawer';
 
 class Home extends Component {
   constructor(props) {
@@ -12,7 +15,12 @@ class Home extends Component {
       queryValue: '',
       isLoaded: false,
       data: [],
+      isModalOpen: false,
+      modalProps: {},
+      navOpen: false,
+      toQuery: false,
     };
+    this.toggelModal = this.toggelModal.bind(this);
   }
 
   componentDidMount() {
@@ -27,9 +35,14 @@ class Home extends Component {
     this.handleSubmit();
   }
 
+  submit(e) {
+    e.preventDefault();
+    // eslint-disable-next-line no-unused-expressions
+    <Redirect from="/" to={`/search/${this.state.queryValue}`} />;
+  }
+
   handleSubmit() {
     axios.get('https://randomuser.me/api/?results=3').then(res => {
-      console.log(res);
       this.setState({
         isLoaded: true,
         data: [...res.data.results],
@@ -39,8 +52,27 @@ class Home extends Component {
 
   handleChange(e) {
     e.preventDefault();
+    console.log(e.keyCode);
     this.setState({
       queryValue: e.target.value,
+    });
+    if (e.keyCode == 13) {
+      // eslint-disable-next-line no-unused-expressions
+    }
+  }
+
+  toggelModal(data) {
+    const { isModalOpen } = this.state;
+    this.setState({
+      modalProps: { ...data },
+      isModalOpen: !isModalOpen,
+    });
+    console.log(this.isModalOpen);
+  }
+
+  toggeleNav() {
+    this.setState({
+      toggeleNav: !this.state.toggeleNav,
     });
   }
 
@@ -51,22 +83,31 @@ class Home extends Component {
         params: { query },
       },
     } = this.props;
-    const { queryValue, isLoaded, data } = this.state;
+    const { queryValue, isLoaded, data, isModalOpen, modalProps } = this.state;
     return (
       <>
+        <div className={Styles.button} onClick={this.toggeleNav} />
         <Navigation />
+        <Drawer open={this.state.toggeleNav} />
         <div className={Styles.searchSection}>
           <h1>Get contact information from just a name!</h1>
           <p>Search up to 500,000 records in seconds</p>
-          <input
-            type="search"
-            placeholder="Enter a name and hit enter to search, eg. Joseph"
-            value={queryValue}
-            onChange={this.handleChange.bind(this)}
-          />
+          <form>
+            <input
+              type="search"
+              placeholder="Enter a name and hit enter to search, eg. Joseph"
+              value={queryValue}
+              onChange={this.handleChange.bind(this)}
+            />
+            {/* <imput type="submit" onClick={() => this.submit} /> */}
+            <button onClick={this.submit.bind(this)}>sub</button>
+          </form>
         </div>
         {isSearch ? (
           <>
+            {isModalOpen && (
+              <Modal {...modalProps} closeModal={this.toggelModal} />
+            )}
             <div className={Styles.searchRes}>
               <p>
                 Top results for
@@ -84,8 +125,15 @@ class Home extends Component {
                     <div className={Styles.placeholder} />
                   </>
                 ) : (
-                  data.map(each => (
-                    <div key={each.login.uuid} className={Styles.card}>
+                  data.map((each, i, arr) => (
+                    <div
+                      key={each.login.uuid}
+                      className={Styles.card}
+                      onClick={this.toggelModal.bind(this, arr[i])}
+                      tabIndex="0"
+                      role="button"
+                      onKeyPress={this.toggelModal.bind(this, arr)}
+                    >
                       <div>
                         <img src={each.picture.medium} alt={each.name.first} />
                       </div>

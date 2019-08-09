@@ -207,11 +207,28 @@
   transform: translateY(4px);
   width: 15px;
 }
+
+.button {
+  height: 100px;
+  width: 100px;
+  background-color: blue;
+  display: none;
+}
+
+input[type='submit'] {
+  visibility: hidden;
+}
+
 @keyframes appear {
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
+  }
+}
+@media screen and (max-width: 1050px) {
+  .demoContent {
+    display: none;
   }
 }

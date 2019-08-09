@@ -35,3 +35,8 @@
   padding: 8px 30px;
   border-radius: 50px;
 }
+@media screen and (max-width: 570px) {
+  .navigation {
+    display: none;
+  }
+}
