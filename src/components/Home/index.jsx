@@ -69,7 +69,7 @@ class Home extends Component {
       modalProps: { ...data },
       isModalOpen: !isModalOpen,
     });
-    console.log(this.isModalOpen);
+    // console.log(this.isModalOpen);
   }
 
   toggeleNav() {
