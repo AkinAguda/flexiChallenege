@@ -1,0 +1,23 @@
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 15px 40px;
+  color: var(--secondary-color);
+}
+.footer > div {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.footer > div > div {
+  margin: 0 10px;
+}
+.hr {
+  width: 90%;
+}
+.last {
+  color: var(--primary-color);
+}
+.container {
+}
